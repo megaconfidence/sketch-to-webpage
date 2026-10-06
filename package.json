@@ -6,10 +6,15 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "check": "npm run cf-typegen && tsc --noEmit && node --check public/app.js",
+    "build": "wrangler deploy --dry-run",
+    "test": "node --test --test-concurrency=1 tests/api.test.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
+    "esbuild": "0.28.1",
+    "miniflare": "5.20260918.0-alpha",
     "typescript": "^5.5.2",
     "wrangler": "^4.135.0"
   }

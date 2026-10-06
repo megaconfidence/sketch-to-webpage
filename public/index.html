@@ -1,20 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Hello, World!</title>
-	</head>
-	<body>
-		<h1 id="heading"></h1>
-		<p>This page comes from a static asset stored at `public/index.html` as configured in `wrangler.jsonc`.</p>
-		<script>
-			fetch('/message')
-				.then((resp) => resp.text())
-				.then((text) => {
-					const h1 = document.getElementById('heading');
-					h1.textContent = text;
-				});
-		</script>
-	</body>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Turn a webpage sketch into a working website. Upload, preview, and download.">
+	<title>Sketch to Webpage</title>
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%236b50d8'/%3E%3Cpath d='M12 27L15 18L27 9L31 14L19 25Z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+	<link rel="stylesheet" href="/styles.css">
+	<script type="module" src="/app.js"></script>
+</head>
+<body>
+	<main>
+		<header class="app-header">
+			<div><h1>Sketch to webpage</h1><p>Upload a sketch. Get a working webpage.</p></div>
+			<div class="header-actions">
+				<button id="reset" class="text-button" type="button" hidden>New sketch</button>
+				<details class="privacy"><summary>Privacy</summary><p>Images and pages stay in memory, not in our storage. Refreshing clears your session. Images are processed by Mistral OCR and Mistral Large 4; Mistral AI's retention policies apply. Download and retry decisions are logged without image or page contents.</p></details>
+			</div>
+		</header>
+
+		<div id="error" class="error-banner" role="alert" hidden></div>
+		<section id="workspace" class="workspace" aria-label="Sketch to webpage workspace">
+			<article class="sketch-panel" aria-label="Your sketch">
+				<h2 id="source-heading" hidden>Sketch</h2>
+				<div id="dropzone" class="dropzone">
+					<div id="upload-empty" class="upload-empty">
+						<svg class="upload-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-5 5 5-5 5 5M4 15v5h16v-5"/></svg>
+						<h2>Drop a sketch here</h2>
+						<p>Or choose an image from your device.</p>
+						<button id="choose" class="button button-primary" type="button">Choose image</button>
+						<span class="file-hint">PNG, JPG or WebP / Up to 5 MB</span>
+					</div>
+					<div id="selected-image" class="selected-image" hidden><img id="sketch-image" alt="Your uploaded webpage sketch"><span id="filename"></span></div>
+					<input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+				</div>
+				<button id="generate" class="button button-primary" type="button" hidden>Generate webpage</button>
+			</article>
+
+			<article id="preview-panel" class="preview-panel" aria-label="Generated webpage" hidden>
+				<div class="preview-toolbar"><h2>Preview</h2><div id="result-actions" class="result-actions" hidden><button id="retry" class="button button-secondary" type="button">Retry</button><button id="download" class="button button-primary" type="button">Download</button></div></div>
+				<div id="preview-stage" class="preview-stage">
+					<iframe id="preview" name="generated-preview" title="Generated webpage preview" sandbox="allow-scripts" referrerpolicy="no-referrer" hidden></iframe>
+					<div id="loading" class="loading" role="status" hidden><span class="spinner" aria-hidden="true"></span><p>Building your webpage...</p></div>
+				</div>
+			</article>
+		</section>
+		<p id="notice" class="notice" role="status" aria-live="polite"></p>
+	</main>
+	<form id="preview-form" method="post" action="/api/preview" target="generated-preview" hidden><input id="preview-html" type="hidden" name="html"></form>
+</body>
 </html>
