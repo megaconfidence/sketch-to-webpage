@@ -25,7 +25,7 @@ export async function createApp({ key = 'test-key', html = sampleHtml, upstreamS
 		serviceBindings: { ASSETS: async (request) => {
 			const path = new URL(request.url).pathname;
 			const files = { '/': ['index.html', 'text/html'], '/styles.css': ['styles.css', 'text/css'], '/app.js': ['app.js', 'text/javascript'] };
-			const file = files[path];
+			const file = files[path] ?? (/^\/samples\/(thumbs\/)?[a-z]+\.jpg$/.test(path) ? [path.slice(1), 'image/jpeg'] : undefined);
 			if (!file) return new RuntimeResponse('Not found', { status: 404 });
 			return new RuntimeResponse(await readFile(root + 'public/' + file[0]), { headers: { 'Content-Type': file[1] } });
 		} },

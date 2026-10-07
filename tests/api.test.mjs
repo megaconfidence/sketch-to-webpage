@@ -23,6 +23,18 @@ test('serves the actual app and protects its origin', { timeout: 20000 }, () => 
 	for (const [, id] of source.matchAll(/byId\('([^']+)'\)/g)) assert.ok(ids.has(id), 'Missing UI element: ' + id);
 }));
 
+test('serves every sample sketch and thumbnail in the deck', { timeout: 20000 }, () => usingApp(async (app) => {
+	const html = await (await app.runtime.dispatchFetch(origin + '/')).text();
+	const sources = [...html.matchAll(/(?:data-src|src)="(\/samples\/[^"]+)"/g)].map(match => match[1]);
+	assert.equal(sources.length, 10);
+	for (const source of sources) {
+		const response = await app.runtime.dispatchFetch(origin + source);
+		assert.equal(response.status, 200, source);
+		assert.equal(response.headers.get('Content-Type'), 'image/jpeg');
+		assert.ok((await response.arrayBuffer()).byteLength < 5 * 1024 * 1024, source);
+	}
+}));
+
 test('runs OCR and vision, reuses OCR on retry, and serves the exact HTML through a Dynamic Worker', { timeout: 20000 }, () => usingApp(async (app) => {
 	const first = await app.post('/api/generate', { image });
 	assert.equal(first.status, 200, await first.clone().text());

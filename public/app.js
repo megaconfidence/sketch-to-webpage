@@ -23,6 +23,7 @@ function updateControls() {
 	byId('download').disabled = busy;
 	byId('choose').disabled = busy;
 	byId('reset').hidden = !image && !busy;
+	byId('samples').hidden = Boolean(image) || busy;
 	byId('result-actions').hidden = !result;
 	byId('loading').hidden = !busy;
 	byId('preview-stage').setAttribute('aria-busy', String(busy));
@@ -88,6 +89,28 @@ async function selectFile(file) {
 	}
 }
 
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+async function selectSample(card) {
+	if (busy || card.classList.contains('drawn')) return;
+	showError('');
+	card.classList.add('drawn');
+	try {
+		// Let the draw animation finish while the full-size sample downloads.
+		const [response] = await Promise.all([
+			fetch(card.dataset.src),
+			new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 0 : 420)),
+		]);
+		if (!response.ok) throw new Error('Sample unavailable');
+		const blob = await response.blob();
+		await selectFile(new File([blob], card.dataset.name, { type: blob.type || 'image/jpeg' }));
+	} catch {
+		showError('This sample could not be loaded. Please try another.');
+	} finally {
+		card.classList.remove('drawn');
+	}
+}
+
 function feedback(action) {
 	if (!result) return;
 	void fetch('/api/feedback', {
@@ -142,6 +165,10 @@ async function generate(retry = false) {
 byId('choose').addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => selectFile(fileInput.files[0]));
 byId('reset').addEventListener('click', () => { clearSession(); byId('choose').focus(); });
+byId('deck').addEventListener('click', (event) => {
+	const card = event.target.closest('.sample-card');
+	if (card) void selectSample(card);
+});
 byId('generate').addEventListener('click', () => generate());
 byId('retry').addEventListener('click', () => generate(true));
 byId('download').addEventListener('click', () => {

@@ -50,6 +50,23 @@ h2 { margin: 0; font-size: 13px; font-weight: 600; }
 .error-banner { margin-bottom: 20px; padding: 13px 16px; border: 1px solid #edcec2; border-radius: 8px; background: #fff1ec; color: #a7472b; font-size: 13px; }
 .notice { margin: 16px 0 0; color: var(--muted); font-size: 12px; text-align: right; }
 .notice:empty { display: none; }
+.samples { container-type: inline-size; margin-top: 40px; text-align: center; }
+.samples p { margin: 5px 0 0; font-size: 12px; color: var(--muted); }
+.deck { --card-w: 116px; --card-h: 156px; --spread: min(104px, calc((100cqw - var(--card-w) - 56px) / 4)); position: relative; height: calc(var(--card-h) + 64px); margin-top: 6px; }
+.sample-card { --stacked: translate(var(--sx), var(--sy)) rotate(var(--sr)); --fanned: translate(calc(var(--o) * var(--spread)), calc(var(--a) * 6px)) rotate(calc(var(--o) * 7deg)); position: absolute; top: 28px; left: calc(50% - var(--card-w) / 2); display: flex; flex-direction: column; width: var(--card-w); height: var(--card-h); padding: 6px 6px 0; border: 1px solid var(--line); border-radius: 10px; background: white; color: var(--ink); box-shadow: 0 1px 2px #2820300f, 0 6px 16px #28203014; transform: var(--stacked); transform-origin: 50% 100%; transition: transform .5s cubic-bezier(.2, .9, .25, 1.15), box-shadow .2s; animation: deal .55s cubic-bezier(.2, .9, .3, 1.1) backwards; animation-delay: calc(var(--n) * 70ms); }
+.sample-card img { flex: 1; min-height: 0; width: 100%; object-fit: cover; object-position: top; border-radius: 5px; background: var(--paper); }
+.sample-card span { padding: 6px 0 7px; overflow: hidden; font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.sample-card:nth-child(1) { --n: 0; --o: -2; --a: 4; --sx: -14px; --sy: 6px; --sr: -9deg; }
+.sample-card:nth-child(2) { --n: 1; --o: -1; --a: 1; --sx: 11px; --sy: 3px; --sr: 6deg; }
+.sample-card:nth-child(3) { --n: 2; --o: 0; --a: 0; --sx: -6px; --sy: 1px; --sr: -4deg; }
+.sample-card:nth-child(4) { --n: 3; --o: 1; --a: 1; --sx: 8px; --sy: -1px; --sr: 3deg; }
+.sample-card:nth-child(5) { --n: 4; --o: 2; --a: 4; --sx: 0px; --sy: -3px; --sr: -1deg; }
+.deck:hover .sample-card, .deck:focus-within .sample-card { transform: var(--fanned); }
+.deck .sample-card:hover, .deck .sample-card:focus-visible { z-index: 6; transform: var(--fanned) translateY(-18px) scale(1.06); box-shadow: 0 2px 4px #28203014, 0 16px 32px #2820302a; }
+.sample-card.drawn { z-index: 7; pointer-events: none; animation: draw .45s cubic-bezier(.5, 0, .75, 0) forwards; }
+@keyframes deal { from { opacity: 0; transform: translateY(70px) scale(.9); } }
+@keyframes draw { to { opacity: 0; transform: translateY(-240px) scale(1.2); } }
+@media (hover: none) { .deck .sample-card { transform: var(--fanned); } }
 @media (max-width: 800px) { main { padding: 28px 24px; } .workspace.has-preview { grid-template-columns: 180px minmax(0, 1fr); gap: 18px; } .preview-toolbar { padding: 12px; } }
-@media (max-width: 620px) { main { padding: 24px 18px; } .app-header { align-items: flex-start; flex-direction: column; gap: 10px; margin-bottom: 24px; } h1 { font-size: 22px; } .header-actions { width: 100%; justify-content: flex-end; gap: 20px; } .privacy p { max-width: calc(100vw - 36px); } .workspace { margin-top: 20px; } .workspace.has-preview { display: block; } .has-preview .sketch-panel { margin-bottom: 18px; } .has-preview #source-heading { display: none; } .has-preview .selected-image { display: flex; align-items: center; gap: 14px; padding: 10px; } .has-preview .selected-image img { width: 72px; height: 60px; } .has-preview #filename { margin: 0; } .upload-empty { padding: 38px 16px 30px; } .notice { text-align: left; } }
+@media (max-width: 620px) { main { padding: 24px 18px; } .app-header { align-items: flex-start; flex-direction: column; gap: 10px; margin-bottom: 24px; } h1 { font-size: 22px; } .header-actions { width: 100%; justify-content: flex-end; gap: 20px; } .privacy p { max-width: calc(100vw - 36px); } .workspace { margin-top: 20px; } .workspace.has-preview { display: block; } .has-preview .sketch-panel { margin-bottom: 18px; } .has-preview #source-heading { display: none; } .has-preview .selected-image { display: flex; align-items: center; gap: 14px; padding: 10px; } .has-preview .selected-image img { width: 72px; height: 60px; } .has-preview #filename { margin: 0; } .upload-empty { padding: 38px 16px 30px; } .notice { text-align: left; } .samples { margin-top: 28px; } .deck { --card-w: 96px; --card-h: 130px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

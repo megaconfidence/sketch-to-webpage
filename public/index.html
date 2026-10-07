@@ -35,6 +35,17 @@
 					<input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
 				</div>
 				<button id="generate" class="button button-primary" type="button" hidden>Generate webpage</button>
+				<section id="samples" class="samples" aria-labelledby="samples-heading">
+					<h2 id="samples-heading">No sketch handy?</h2>
+					<p>Draw a card from the deck to try a sample.</p>
+					<div id="deck" class="deck">
+						<button class="sample-card" type="button" data-src="/samples/band.jpg" data-name="Band site sample.jpg" aria-label="Try the band site sample"><img src="/samples/thumbs/band.jpg" alt="" width="218" height="320" decoding="async"><span>Band site</span></button>
+						<button class="sample-card" type="button" data-src="/samples/blog.jpg" data-name="Blog sample.jpg" aria-label="Try the blog sample"><img src="/samples/thumbs/blog.jpg" alt="" width="292" height="320" decoding="async"><span>Blog</span></button>
+						<button class="sample-card" type="button" data-src="/samples/radio.jpg" data-name="Radio station sample.jpg" aria-label="Try the radio station sample"><img src="/samples/thumbs/radio.jpg" alt="" width="320" height="317" decoding="async"><span>Radio station</span></button>
+						<button class="sample-card" type="button" data-src="/samples/health.jpg" data-name="Health portal sample.jpg" aria-label="Try the health portal sample"><img src="/samples/thumbs/health.jpg" alt="" width="239" height="320" decoding="async"><span>Health portal</span></button>
+						<button class="sample-card" type="button" data-src="/samples/business.jpg" data-name="Business site sample.jpg" aria-label="Try the business site sample"><img src="/samples/thumbs/business.jpg" alt="" width="225" height="320" decoding="async"><span>Business site</span></button>
+					</div>
+				</section>
 			</article>
 
 			<article id="preview-panel" class="preview-panel" aria-label="Generated webpage" hidden>
