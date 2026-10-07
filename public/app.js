@@ -16,6 +16,7 @@ function updateControls() {
 	const hasPreview = busy || Boolean(result);
 	byId('workspace').classList.toggle('has-preview', hasPreview);
 	byId('preview-panel').hidden = !hasPreview;
+	byId('hero').hidden = hasPreview;
 	byId('source-heading').hidden = !image;
 	byId('generate').disabled = !image || busy;
 	byId('generate').hidden = !image || Boolean(result) || busy;
@@ -30,8 +31,52 @@ function updateControls() {
 	iframe.hidden = !result;
 }
 
+// The API reports no progress, so steps follow the typical timing of OCR and generation.
+const STEPS = [
+	[0, 'Reading your handwriting'],
+	[4, 'Mapping out the layout'],
+	[9, 'Choosing colors and type'],
+	[15, 'Writing the HTML'],
+	[25, 'Styling each section'],
+	[38, 'Wiring up interactions'],
+	[52, 'Polishing the details'],
+	[70, 'Almost there. Detailed sketches take a little longer'],
+];
+const RETRY_STEPS = [[0, 'Reviewing what to fix'], [5, 'Rethinking the layout'], ...STEPS.slice(3)];
+let loadingTimer = null;
+
+function stopLoading() {
+	clearInterval(loadingTimer);
+	loadingTimer = null;
+}
+
+function startLoading(retry) {
+	stopLoading();
+	const steps = retry ? RETRY_STEPS : STEPS;
+	const started = Date.now();
+	let shown = -1;
+	const tick = () => {
+		const seconds = Math.floor((Date.now() - started) / 1000);
+		const index = steps.findLastIndex(([at]) => seconds >= at);
+		if (index !== shown) {
+			shown = index;
+			const step = byId('loading-step');
+			step.textContent = steps[index][1];
+			step.classList.remove('swap');
+			void step.offsetWidth;
+			step.classList.add('swap');
+		}
+		byId('loading-time').textContent = seconds < 60 ? seconds + 's' : Math.floor(seconds / 60) + 'm ' + String(seconds % 60).padStart(2, '0') + 's';
+		// Eases toward 95% so the bar keeps moving without claiming to be done.
+		byId('loading-bar').style.transform = 'scaleX(' + (0.95 * (1 - Math.exp(-seconds / 35))).toFixed(3) + ')';
+	};
+	tick();
+	loadingTimer = setInterval(tick, 1000);
+}
+
 function clearSession() {
 	revision += 1;
+	stopLoading();
 	controller?.abort();
 	controller = null;
 	image = null;
@@ -132,6 +177,7 @@ async function generate(retry = false) {
 	showError('');
 	byId('notice').textContent = '';
 	updateControls();
+	startLoading(retry && Boolean(previous));
 	const timeout = setTimeout(() => activeController.abort(), 190_000);
 	try {
 		const response = await fetch('/api/generate', {
@@ -155,6 +201,7 @@ async function generate(retry = false) {
 	} finally {
 		clearTimeout(timeout);
 		if (currentRevision === revision) {
+			stopLoading();
 			busy = false;
 			controller = null;
 			updateControls();

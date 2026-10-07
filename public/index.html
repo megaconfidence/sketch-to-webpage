@@ -4,40 +4,41 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Turn a webpage sketch into a working website. Upload, preview, and download.">
+	<meta name="theme-color" content="#fdfdfd">
 	<title>Sketch to Webpage</title>
-	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%236b50d8'/%3E%3Cpath d='M12 27L15 18L27 9L31 14L19 25Z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230e7e4e'/%3E%3Cpath d='M12 27L15 18L27 9L31 14L19 25Z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+	<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="stylesheet" href="/styles.css">
 	<script type="module" src="/app.js"></script>
 </head>
 <body>
 	<main>
-		<header class="app-header">
-			<div><h1>Sketch to webpage</h1><p>Upload a sketch. Get a working webpage.</p></div>
+		<header class="app-header rise">
+			<div class="brand">
+				<span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg></span>
+				<h1>Sketch to webpage</h1>
+			</div>
 			<div class="header-actions">
-				<button id="reset" class="text-button" type="button" hidden>New sketch</button>
-				<details class="privacy"><summary>Privacy</summary><p>Images and pages stay in memory, not in our storage. Refreshing clears your session. Images are processed by Mistral OCR and Mistral Large 4; Mistral AI's retention policies apply. Download and retry decisions are logged without image or page contents.</p></details>
+				<button id="reset" class="pill-button" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span class="pill-label">New sketch</span></button>
+				<details class="privacy">
+					<summary class="pill-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/></svg><span class="pill-label">Privacy</span></summary>
+					<p>Images and pages stay in memory, not in our storage. Refreshing clears your session. Images are processed by Mistral OCR and Mistral Large 4; Mistral AI's retention policies apply. Download and retry decisions are logged without image or page contents.</p>
+				</details>
 			</div>
 		</header>
 
+		<section id="hero" class="hero" aria-labelledby="hero-title">
+			<h2 id="hero-title" class="hero-title rise d2">From rough sketch to <span>working webpage</span></h2>
+			<p class="hero-sub rise d3">Upload a hand-drawn wireframe. It reads your sketch and builds a responsive page you can preview and download in about a minute.</p>
+		</section>
+
 		<div id="error" class="error-banner" role="alert" hidden></div>
-		<section id="workspace" class="workspace" aria-label="Sketch to webpage workspace">
+		<section id="workspace" class="workspace rise d4" aria-label="Sketch to webpage workspace">
 			<article class="sketch-panel" aria-label="Your sketch">
-				<h2 id="source-heading" hidden>Sketch</h2>
-				<div id="dropzone" class="dropzone">
-					<div id="upload-empty" class="upload-empty">
-						<svg class="upload-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-5 5 5-5 5 5M4 15v5h16v-5"/></svg>
-						<h2>Drop a sketch here</h2>
-						<p>Or choose an image from your device.</p>
-						<button id="choose" class="button button-primary" type="button">Choose image</button>
-						<span class="file-hint">PNG, JPG or WebP / Up to 5 MB</span>
-					</div>
-					<div id="selected-image" class="selected-image" hidden><img id="sketch-image" alt="Your uploaded webpage sketch"><span id="filename"></span></div>
-					<input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
-				</div>
-				<button id="generate" class="button button-primary" type="button" hidden>Generate webpage</button>
+				<h2 id="source-heading" class="panel-label" hidden>Your sketch</h2>
 				<section id="samples" class="samples" aria-labelledby="samples-heading">
-					<h2 id="samples-heading">No sketch handy?</h2>
-					<p>Draw a card from the deck to try a sample.</p>
+					<h2 id="samples-heading" class="divider">Try a sample sketch</h2>
 					<div id="deck" class="deck">
 						<button class="sample-card" type="button" data-src="/samples/band.jpg" data-name="Band site sample.jpg" aria-label="Try the band site sample"><img src="/samples/thumbs/band.jpg" alt="" width="218" height="320" decoding="async"><span>Band site</span></button>
 						<button class="sample-card" type="button" data-src="/samples/blog.jpg" data-name="Blog sample.jpg" aria-label="Try the blog sample"><img src="/samples/thumbs/blog.jpg" alt="" width="292" height="320" decoding="async"><span>Blog</span></button>
@@ -45,14 +46,47 @@
 						<button class="sample-card" type="button" data-src="/samples/health.jpg" data-name="Health portal sample.jpg" aria-label="Try the health portal sample"><img src="/samples/thumbs/health.jpg" alt="" width="239" height="320" decoding="async"><span>Health portal</span></button>
 						<button class="sample-card" type="button" data-src="/samples/business.jpg" data-name="Business site sample.jpg" aria-label="Try the business site sample"><img src="/samples/thumbs/business.jpg" alt="" width="225" height="320" decoding="async"><span>Business site</span></button>
 					</div>
+					<p class="divider">or upload your own</p>
 				</section>
+				<div id="dropzone" class="dropzone">
+					<div id="upload-empty" class="upload-empty">
+						<span class="upload-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg></span>
+						<h2>Drop your sketch here</h2>
+						<p>Drag and drop, paste, or choose an image from your device.</p>
+						<button id="choose" class="button button-primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/></svg>Choose image</button>
+						<span class="file-hint"><span class="chip">PNG</span><span class="chip">JPG</span><span class="chip">WebP</span>up to 5 MB</span>
+					</div>
+					<div id="selected-image" class="selected-image" hidden><img id="sketch-image" alt="Your uploaded webpage sketch"><span id="filename"></span></div>
+					<input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+				</div>
+				<button id="generate" class="button button-primary button-large" type="button" hidden>Generate webpage<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
 			</article>
 
 			<article id="preview-panel" class="preview-panel" aria-label="Generated webpage" hidden>
-				<div class="preview-toolbar"><h2>Preview</h2><div id="result-actions" class="result-actions" hidden><button id="retry" class="button button-secondary" type="button">Retry</button><button id="download" class="button button-primary" type="button">Download</button></div></div>
+				<div class="preview-toolbar">
+					<span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+					<h2 class="sr-only">Preview</h2>
+					<span class="address" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>my-webpage.html</span>
+					<div id="result-actions" class="result-actions" hidden>
+						<button id="retry" class="button button-secondary" type="button"><svg class="retry-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>Retry</button>
+						<button id="download" class="button button-primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>Download</button>
+					</div>
+				</div>
 				<div id="preview-stage" class="preview-stage">
 					<iframe id="preview" name="generated-preview" title="Generated webpage preview" sandbox="allow-scripts" referrerpolicy="no-referrer" hidden></iframe>
-					<div id="loading" class="loading" role="status" hidden><span class="spinner" aria-hidden="true"></span><p>Building your webpage...</p></div>
+					<div id="loading" class="loading" role="status" hidden>
+						<span class="sr-only">Generating your webpage. This usually takes under a minute.</span>
+						<div class="blueprint" aria-hidden="true">
+							<div class="bp-nav"><i class="bp-logo s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i></div>
+							<div class="bp-hero"><i class="bp-title s5"></i><i class="bp-line s6"></i><i class="bp-line bp-short s7"></i><i class="bp-cta s8"></i></div>
+							<div class="bp-grid"><i class="s9"></i><i class="s10"></i><i class="s11"></i></div>
+						</div>
+						<div class="loading-copy" aria-hidden="true">
+							<p class="loading-line"><span id="loading-step" class="loading-step">Reading your handwriting</span><span class="dots"><i></i><i></i><i></i></span></p>
+							<div class="progress"><span id="loading-bar"></span></div>
+							<p class="loading-meta"><span id="loading-time">0s</span><span>Usually under a minute</span></p>
+						</div>
+					</div>
 				</div>
 			</article>
 		</section>
